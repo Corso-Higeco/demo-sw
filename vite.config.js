@@ -5,6 +5,6 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     port: 5173,
-    allowedHosts: ['transmittable-carrie-noncertified.ngrok-free.dev']
+    allowedHosts: true
   },
 })
