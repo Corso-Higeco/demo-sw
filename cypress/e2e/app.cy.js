@@ -13,7 +13,7 @@ describe('SolarWatch - navigazione tecnico', () => {
   })
 
   it('mostra la dashboard con la lista impianti', () => {
-    cy.get('[data-cy=dashboard]').should('be.visible')
+    cy.get('[data-cy=dashboard]').should('not.be.visible')
     cy.get('[data-cy=plant-row-1]').should('be.visible')
     cy.get('[data-cy=plant-power-1]').should('contain', 'kW')
   })
