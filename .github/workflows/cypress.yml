@@ -1,7 +1,6 @@
 # Pipeline CI del corso — esegue i test Cypress in automatico su GitHub.
 # Ogni riga è commentata: è lo stesso file che i partecipanti scrivono nel laboratorio CI/CD.
 
-
 name: CI Cypress                       # nome che comparirà nella tab "Actions" di GitHub
 
 on:                                   # QUANDO deve partire la pipeline (i "trigger")
@@ -31,7 +30,7 @@ jobs:                                 # un workflow contiene uno o più "job" (g
         with:
           name: video-smoke
           path: cypress/videos        # i video degli smoke tests, utili per capire un fallimento
-  e2e:                                # JOB 2 — gli E2E: sulla PR verso main e al merge (push su main)
+  e2e:                                # JOB 2 — gli E2E: sulla PR verso main
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
