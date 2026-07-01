@@ -7,4 +7,7 @@ export default defineConfig({
     specPattern: 'cypress/{e2e,smoke}/**/*.cy.js',
     video: true,
   },
+  env: {
+    API_KEY: 'fake-api-key',
+  }
 })
