@@ -45,6 +45,8 @@ jobs:                                 # un workflow contiene uno o più "job" (g
         with:
           start: npm run dev          # avvia il server di sviluppo (Vite)
           wait-on: 'http://localhost:5173'   # aspetta che l'app risponda prima di testare
+        env:
+          CYPRESS_API_KEY: ${{ secrets.API_KEY }}   # <- dal Secret di GitHub
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

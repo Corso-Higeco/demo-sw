@@ -46,3 +46,11 @@ describe('SolarWatch - accesso cliente', () => {
     cy.get('[data-cy=nav-report]').should('not.exist')
   })
 })
+
+describe('env / secrets', () => {
+  it('la chiave API è disponibile ai test', () => {
+    const apiKey = Cypress.env('API_KEY')
+    expect(apiKey, 'API_KEY deve essere iniettata via CYPRESS_API_KEY')
+      .to.be.a('string').and.not.be.empty
+  })
+})

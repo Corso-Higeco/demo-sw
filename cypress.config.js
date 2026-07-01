@@ -6,5 +6,5 @@ export default defineConfig({
     supportFile: 'cypress/support/e2e.js',
     specPattern: 'cypress/{e2e,smoke}/**/*.cy.js',
     video: true,
-  },
+  }
 })
