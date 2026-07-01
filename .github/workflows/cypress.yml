@@ -1,21 +1,53 @@
-name: CI E2E
-on:
+# Pipeline CI del corso — esegue i test Cypress in automatico su GitHub.
+# Ogni riga è commentata: è lo stesso file che i partecipanti scrivono nel laboratorio CI/CD.
+
+
+name: CI Cypress                       # nome che comparirà nella tab "Actions" di GitHub
+
+on:                                   # QUANDO deve partire la pipeline (i "trigger")
+  push:                               # a ogni push (anche sui branch): girano i component test (feedback rapido)
   pull_request:
-    branches: [main]      # verifica quando apri la PR verso main
-  push:
-    branches: [main]      # e di nuovo al merge su main
-jobs:
-  e2e:
+    branches: [main]                  # PR verso main: girano anche gli E2E (verifica PRIMA del merge)
+
+jobs:                                 # un workflow contiene uno o più "job" (gruppi di passi)
+
+  smoke: # JOB 1 — gli smoke test li facciamo girare sempre
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: npm }
-      - run: npm ci
-      - uses: cypress-io/github-action@v6
         with:
-          start: npm run dev          # avvia l'app
-          wait-on: 'http://localhost:5173'
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: smoke tests               # cypress-io/github-action avvia l'app e poi lancia gli smoke tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run dev          # avvia il server di sviluppo (Vite)
+          wait-on: 'http://localhost:5173'   # aspetta che l'app risponda prima di testare
+          spec: 'cypress/smoke/**/*.cy.js'   # solo gli smoke
       - uses: actions/upload-artifact@v4
         if: failure()
-        with: { name: e2e-video, path: cypress/videos }
+        with:
+          name: video-smoke
+          path: cypress/videos        # i video degli smoke tests, utili per capire un fallimento
+  e2e:                                # JOB 2 — gli E2E: sulla PR verso main e al merge (push su main)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: E2E tests               # cypress-io/github-action avvia l'app e poi lancia gli E2E
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run dev          # avvia il server di sviluppo (Vite)
+          wait-on: 'http://localhost:5173'   # aspetta che l'app risponda prima di testare
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: video-e2e
+          path: cypress/videos        # i video dei test E2E, utili per capire un fallimento
